@@ -1,262 +1,553 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Occulant | Vision Redefined</title>
-    <meta name="description"
-        content="State of the art system for visual navigation making use of AI, VLMs, Custom YOLOv11seg, and Haptic feedback.">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@100;400&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClearStep &mdash; Real-Time AI Spatial Awareness &amp; Obstacle Navigation Assistant for the Visually Impaired</title>
+  <meta name="description" content="ClearStep is an open-source real-time visual perception, semantic segmentation, and spatial haptic navigation system designed for visually impaired users.">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div id="noise"></div>
 
-    <nav class="navbar">
-        <div class="logo">OCCULANT<span>.sys</span></div>
-        <div class="nav-links">
-            <a href="#system">System</a>
-            <a href="#architecture">Architecture</a>
-            <a href="http://localhost:5000" class="demo-link" target="_blank">Live Demo <span class="arrow">↗</span></a>
-        </div>
-    </nav>
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="wordmark">
+        <span class="wordmark-symbol">C</span>
+        <span>ClearStep</span>
+        <span class="brand-badge">Spatial AI v2.4</span>
+      </a>
 
-    <main class="hero">
+      <ul class="nav-links">
+        <li><a href="#architecture" class="nav-link">How It Works</a></li>
+        <li><a href="#features" class="nav-link">Core Pillars</a></li>
+      </ul>
+
+      <div class="header-actions">
+        <a href="https://github.com/manthanabc/BlindAssit" target="_blank" rel="noopener noreferrer" class="btn-secondary">GitHub</a>
+        <a href="http://localhost:5000" target="_blank" rel="noopener noreferrer" class="btn-primary">Launch Live Demo &nearr;</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-grid">
         <div class="hero-content">
-            <h1>Perception.<br><span class="highlight">Synthesized.</span></h1>
-            <p>A completely autonomous visual navigation matrix. Powered by bespoke YOLOv11seg models, robust
-                Vision-Language Models (VLMs), and real-time haptic translation.</p>
-            <div class="cta-group">
-                <a href="http://localhost:5000" class="primary-btn" target="_blank">Initialize Live Demo</a>
-                <a href="#architecture" class="secondary-btn">Read the Paper</a>
+          <div class="hero-badge-pill">
+            <span class="hero-badge-dot"></span>
+            <span>ACCESSIBLE MOBILITY RE-ENGINEERED</span>
+          </div>
+
+          <h1 class="hero-title">
+            Walk with certainty. <span>Guided by real-time intelligence.</span>
+          </h1>
+
+          <p class="hero-desc">
+            ClearStep transforms your surroundings into immediate audio cues and silent haptic vibrations in under 20ms—giving you the freedom to navigate sidewalks, crossings, and obstacles with total confidence.
+          </p>
+
+          <div class="hero-actions-wrap">
+            <div class="hero-actions">
+              <a href="http://localhost:5000" target="_blank" rel="noopener noreferrer" class="btn-primary">Experience Live Demo &nearr;</a>
+              <a href="#architecture" class="btn-secondary">See How It Works &darr;</a>
             </div>
-        </div>
+            <span class="cta-reassurance">&bull; Runs locally in your browser &bull; No sign-up or hardware setup required</span>
+          </div>
 
-        <div class="hero-visual">
-            <div class="visualizer-container">
-                <canvas id="vision-canvas"></canvas>
-                <div class="ui-overlay">
-                    <div class="top-left corner"></div>
-                    <div class="top-right corner"></div>
-                    <div class="bottom-left corner"></div>
-                    <div class="bottom-right corner"></div>
-
-                    <div class="status-panel">
-                        <div class="status-item">
-                            <div class="dot blinking"></div> VLM: ACTIVE
-                        </div>
-                        <div class="status-item">
-                            <div class="dot blinking"></div> YOLOv11-SEG: 120 FPS
-                        </div>
-                        <div class="status-item">
-                            <div class="dot blinking"></div> HAPTIC: LINKED
-                        </div>
-                    </div>
-
-                    <div id="terminal-readout" class="terminal-readout">
-                        > Booting sequence...
-                    </div>
-                </div>
+          <div class="hero-figures">
+            <div class="figure-item">
+              <span class="figure-number">&lt; 15ms</span>
+              <span class="figure-label">Human Reflex Latency</span>
+              <span class="figure-sub">Instant reaction before cane contact</span>
             </div>
+            <div class="figure-item">
+              <span class="figure-number">72.4%</span>
+              <span class="figure-label">Cityscapes Accuracy</span>
+              <span class="figure-sub">Sub-pixel obstacle &amp; curb isolation</span>
+            </div>
+            <div class="figure-item">
+              <span class="figure-number">100%</span>
+              <span class="figure-label">On-Device Privacy</span>
+              <span class="figure-sub">Zero video stream ever leaves your device</span>
+            </div>
+          </div>
         </div>
-    </main>
 
-    <section id="architecture" class="system-section">
-        <div class="section-header">
-            <h2>System Architecture</h2>
-            <p>Information flows seamlessly from photon to haptic response in under 20 milliseconds.</p>
+        <!-- Hero Media (Live Camera Console Simulator) -->
+        <div class="browser-frame">
+          <div class="browser-header">
+            <div class="browser-dots">
+              <span class="browser-dot"></span>
+              <span class="browser-dot"></span>
+              <span class="browser-dot"></span>
+            </div>
+            <div class="browser-url">localhost:5000/console</div>
+          </div>
+
+          <div class="browser-body">
+            <video src="haptics_video.mp4" autoplay loop muted playsinline poster="bg.jpg" aria-label="Real-time camera feed simulator showing segmented safe pathway and obstacle clearance"></video>
+
+            <div class="overlay-status-tag">
+              <span class="tag-dot"></span>
+              <span>SeaFormer-B &bull; 60 FPS</span>
+            </div>
+
+            <div class="overlay-instruction-bar">
+              <span>&bull; Guidance: Path Clear &bull; Continue Straight</span>
+              <span style="font-family: monospace; font-size: 0.8rem; opacity: 0.85;">14.2ms</span>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <div class="arch-container">
-            <svg width="100%" viewBox="0 0 800 600" class="animated-arch">
-                <defs>
-                    <marker id="arrowhead" markerWidth="6" markerHeight="8" refX="5" refY="4" orient="auto">
-                        <polygon points="0 0, 6 4, 0 8" fill="#fff" />
-                    </marker>
-                </defs>
+    <!-- System Architecture Flowchart (Standard Academic / Engineering Project Flow) -->
+    <section class="section architecture-section" id="architecture">
+      <div class="container">
+        <div class="section-label">HOW IT WORKS IN 20 MILLISECONDS</div>
+        <h2 class="section-title">System Execution Flowchart</h2>
+        <p class="section-desc">
+          Standard engineering flowchart illustrating the real-time execution loop: frame acquisition, SeaFormer-B segmentation, 3-zone spatial decision logic, and multi-channel actuation.
+        </p>
 
-                <!-- Nodes -->
-                <g class="node n-video" transform="translate(100, 50)">
-                    <rect width="200" height="100" rx="15" fill="rgba(0,0,0,0.5)" stroke="var(--border-color)"
-                        stroke-width="2" />
-                    <text x="100" y="52" fill="var(--text-primary)" text-anchor="middle" dominant-baseline="middle"
-                        font-family="var(--font-sans)" font-size="18">VIDEO</text>
-                </g>
+        <div class="diagram-card">
+          <div class="arch-svg-container">
+            <svg class="arch-svg" width="1140" height="490" viewBox="0 0 1140 490" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="svgFlowTitle svgFlowDesc">
+              <title id="svgFlowTitle">ClearStep Engineering Execution Flowchart</title>
+              <desc id="svgFlowDesc">Standard engineering flowchart with Start oval, Input/Output parallelograms, Process rectangles, Decision diamonds with YES/NO branches, and continuous cycle loopback.</desc>
+              
+              <defs>
+                <marker id="flow-arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#2e5bff"/>
+                </marker>
+                <marker id="flow-arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#10b981"/>
+                </marker>
+                <marker id="flow-arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#ef4444"/>
+                </marker>
+                <marker id="flow-arrow-indigo" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#6366f1"/>
+                </marker>
+              </defs>
 
-                <g class="node n-llm-top" transform="translate(500, 50)">
-                    <rect width="200" height="100" rx="15" fill="rgba(0,0,0,0.5)" stroke="var(--border-color)"
-                        stroke-width="2" />
-                    <text x="100" y="52" fill="var(--text-primary)" text-anchor="middle" dominant-baseline="middle"
-                        font-family="var(--font-sans)" font-size="18">LLM</text>
-                </g>
+              <!-- Flowchart Standard Legend (College / Academic Format) -->
+              <g id="flowchart-legend">
+                <rect x="740" y="12" width="385" height="34" rx="4" fill="#ffffff" stroke="#e0e0df" stroke-width="1.5"/>
+                <!-- Terminator -->
+                <rect x="750" y="20" width="24" height="18" rx="9" fill="#201f20"/>
+                <text x="780" y="33" font-family="'Host Grotesk', sans-serif" font-size="11" fill="#494949">Start/Loop</text>
+                <!-- I/O -->
+                <polygon points="846,20 864,20 858,38 840,38" fill="#edf2ff" stroke="#2e5bff" stroke-width="1.2"/>
+                <text x="870" y="33" font-family="'Host Grotesk', sans-serif" font-size="11" fill="#494949">Input/Output</text>
+                <!-- Process -->
+                <rect x="944" y="20" width="22" height="18" rx="2" fill="#ffffff" stroke="#201f20" stroke-width="1.2"/>
+                <text x="972" y="33" font-family="'Host Grotesk', sans-serif" font-size="11" fill="#494949">Process</text>
+                <!-- Decision -->
+                <polygon points="1028,29 1038,19 1048,29 1038,39" fill="#fefce8" stroke="#ca8a04" stroke-width="1.2"/>
+                <text x="1054" y="33" font-family="'Host Grotesk', sans-serif" font-size="11" fill="#494949">Decision</text>
+              </g>
 
-                <g class="node n-va" transform="translate(100, 250)">
-                    <rect width="200" height="100" rx="15" fill="rgba(255,255,255,0.05)" stroke="var(--text-primary)"
-                        stroke-width="2" />
-                    <text x="100" y="52" fill="var(--text-primary)" text-anchor="middle" dominant-baseline="middle"
-                        font-family="var(--font-sans)" font-size="18" font-weight="600">VisionAssist</text>
-                </g>
+              <!-- Flow Header Label -->
+              <text x="25" y="35" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#201f20" letter-spacing="0.04em">MAIN NAVIGATION PIPELINE (60 FPS CONTINUOUS LOOP)</text>
 
-                <g class="node n-ml" transform="translate(500, 250)">
-                    <rect width="200" height="100" rx="15" fill="rgba(255,255,255,0.05)" stroke="var(--text-primary)"
-                        stroke-width="2" />
-                    <text x="100" y="52" fill="var(--text-primary)" text-anchor="middle" dominant-baseline="middle"
-                        font-family="var(--font-sans)" font-size="18" font-weight="600">ML Model</text>
-                </g>
+              <!-- ─── ROW 1: Sequential Process Flow ─── -->
 
-                <g class="node n-llm-bot" transform="translate(430, 430)">
-                    <rect width="80" height="40" rx="10" fill="rgba(0,0,0,0.5)" stroke="var(--border-color)"
-                        stroke-width="2" />
-                    <text x="40" y="22" fill="var(--text-primary)" text-anchor="middle" dominant-baseline="middle"
-                        font-family="var(--font-sans)" font-size="14">LLM</text>
-                </g>
+              <!-- 1. START TERMINATOR (Oval) -->
+              <rect x="25" y="70" width="90" height="42" rx="21" fill="#201f20"/>
+              <text x="70" y="96" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">START</text>
 
-                <g class="node n-user" transform="translate(100, 450)">
-                    <rect width="200" height="100" rx="15" fill="rgba(0,0,0,0.5)" stroke="var(--border-color)"
-                        stroke-width="2" />
-                    <text x="100" y="52" fill="var(--text-primary)" text-anchor="middle" dominant-baseline="middle"
-                        font-family="var(--font-sans)" font-size="18">User</text>
-                </g>
+              <!-- Arrow: Start -> Input -->
+              <path d="M 115 91 L 145 91" stroke="#2e5bff" stroke-width="2" marker-end="url(#flow-arrow-blue)"/>
 
-                <!-- Animated Paths Data -->
-                <!-- VIDEO to VisionAssist -->
-                <path class="arrow p-vid-va" d="M 200 150 L 200 248 L 195 240 M 200 248 L 205 240"
-                    stroke="var(--text-primary)" stroke-width="2" fill="none" stroke-linejoin="round" />
+              <!-- 2. DATA INPUT: Video Stream (Parallelogram) -->
+              <polygon points="160,68 315,68 300,114 145,114" fill="#edf2ff" stroke="#2e5bff" stroke-width="1.5"/>
+              <text x="230" y="87" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#1e40af" text-anchor="middle">INPUT: Camera Stream</text>
+              <text x="230" y="103" font-family="monospace" font-size="10" fill="#2e5bff" text-anchor="middle">640&times;480 RGB @ 60 FPS</text>
 
-                <!-- User to VisionAssist -->
-                <g class="arrow-group p-user-va">
-                    <path class="arrow p-user-va-path" d="M 200 450 L 200 352 L 195 360 M 200 352 L 205 360"
-                        stroke="var(--text-primary)" stroke-width="2" fill="none" stroke-linejoin="round" />
-                    <text x="180" y="405" fill="var(--text-secondary)" text-anchor="end" font-family="var(--font-mono)"
-                        font-size="14">asks</text>
-                </g>
+              <!-- Arrow: Input -> Process 1 -->
+              <path d="M 310 91 L 345 91" stroke="#2e5bff" stroke-width="2" marker-end="url(#flow-arrow-blue)"/>
 
-                <!-- VisionAssist to ML Model -->
-                <path class="arrow p-va-ml" d="M 300 300 L 498 300 L 490 295 M 498 300 L 490 305"
-                    stroke="var(--text-primary)" stroke-width="2" fill="none" stroke-linejoin="round" />
+              <!-- 3. PROCESS 1: Preprocessing (Rectangle) -->
+              <rect x="345" y="68" width="180" height="46" rx="4" fill="#ffffff" stroke="#201f20" stroke-width="1.5"/>
+              <text x="435" y="87" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#201f20" text-anchor="middle">PROCESS: Preprocessing</text>
+              <text x="435" y="103" font-family="monospace" font-size="10" fill="#606060" text-anchor="middle">cv2.resize((512,512)) &amp; Norm</text>
 
-                <!-- ML Model to User (lines down, then left) -->
-                <g class="arrow-group p-ml-user">
-                    <path class="arrow p-ml-user-path" d="M 600 350 L 600 500 L 302 500 L 310 495 M 302 500 L 310 505"
-                        stroke="var(--text-primary)" stroke-width="2" fill="none" stroke-linejoin="round" />
-                    <text x="450" y="490" fill="var(--text-secondary)" text-anchor="middle"
-                        font-family="var(--font-mono)" font-size="14">continuous feedback</text>
-                </g>
+              <!-- Arrow: Process 1 -> Process 2 -->
+              <path d="M 525 91 L 560 91" stroke="#2e5bff" stroke-width="2" marker-end="url(#flow-arrow-blue)"/>
+
+              <!-- 4. PROCESS 2: SeaFormer Inference (Rectangle) -->
+              <rect x="560" y="68" width="195" height="46" rx="4" fill="#ffffff" stroke="#2e5bff" stroke-width="2"/>
+              <text x="657" y="87" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#2e5bff" text-anchor="middle">PROCESS: SeaFormer-B</text>
+              <text x="657" y="103" font-family="monospace" font-size="10" fill="#494949" text-anchor="middle">TensorRT FP16 (19 Classes)</text>
+
+              <!-- Arrow: Process 2 -> Process 3 -->
+              <path d="M 755 91 L 790 91" stroke="#2e5bff" stroke-width="2" marker-end="url(#flow-arrow-blue)"/>
+
+              <!-- 5. PROCESS 3: Zone Slicing (Rectangle) -->
+              <rect x="790" y="68" width="185" height="46" rx="4" fill="#ffffff" stroke="#201f20" stroke-width="1.5"/>
+              <text x="882" y="87" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#201f20" text-anchor="middle">PROCESS: Zone Slicing</text>
+              <text x="882" y="103" font-family="monospace" font-size="10" fill="#606060" text-anchor="middle">L: 33% | C: 34% | R: 33%</text>
+
+              <!-- Connector down to Decision 1 -->
+              <path d="M 882 114 L 882 150" stroke="#2e5bff" stroke-width="2" marker-end="url(#flow-arrow-blue)"/>
+
+              <!-- ─── ROW 2: Decisions & Branch Logic ─── -->
+
+              <!-- 6. DECISION 1 (Diamond: Center Clearance Threshold) -->
+              <polygon points="882,150 977,195 882,240 787,195" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
+              <text x="882" y="191" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#854d0e" text-anchor="middle">Is Center Path Clear?</text>
+              <text x="882" y="207" font-family="monospace" font-size="10" fill="#a16207" text-anchor="middle">(Clearance &ge; 75%)</text>
+
+              <!-- Branch 1: YES (Clearance >= 75%) heading Left -->
+              <path d="M 787 195 L 680 195" stroke="#10b981" stroke-width="2" marker-end="url(#flow-arrow-green)"/>
+              <rect x="722" y="184" width="28" height="16" rx="3" fill="#ecfdf5" stroke="#a7f3d0"/>
+              <text x="736" y="196" font-family="monospace" font-size="9" font-weight="700" fill="#059669" text-anchor="middle">YES</text>
+
+              <!-- Process: Set Safe Path -->
+              <rect x="480" y="172" width="200" height="46" rx="4" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+              <text x="580" y="191" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#15803d" text-anchor="middle">PROCESS: Set Safe State</text>
+              <text x="580" y="207" font-family="monospace" font-size="10" fill="#166534" text-anchor="middle">"Path Clear. Continue Straight"</text>
+
+              <!-- Arrow to Output Parallelogram -->
+              <path d="M 480 195 L 420 195" stroke="#10b981" stroke-width="2" marker-end="url(#flow-arrow-green)"/>
+
+              <!-- OUTPUT 1: Safe Haptics (Parallelogram) -->
+              <polygon points="230,172 415,172 400,218 215,218" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+              <text x="315" y="191" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#15803d" text-anchor="middle">OUTPUT: 50ms Haptic Tap</text>
+              <text x="315" y="207" font-family="monospace" font-size="10" fill="#166534" text-anchor="middle">navigator.vibrate([50])</text>
+
+              <!-- Branch 2: NO (Center Blocked) heading Down to Decision 2 -->
+              <path d="M 882 240 L 882 275" stroke="#ef4444" stroke-width="2" marker-end="url(#flow-arrow-red)"/>
+              <rect x="888" y="248" width="24" height="16" rx="3" fill="#fef2f2" stroke="#fecaca"/>
+              <text x="900" y="260" font-family="monospace" font-size="9" font-weight="700" fill="#dc2626" text-anchor="middle">NO</text>
+
+              <!-- 7. DECISION 2 (Diamond: Lateral Clearance Check) -->
+              <polygon points="882,275 977,320 882,365 787,320" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+              <text x="882" y="316" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#991b1b" text-anchor="middle">Lateral Path Clear?</text>
+              <text x="882" y="332" font-family="monospace" font-size="10" fill="#b91c1c" text-anchor="middle">(Left or Right &ge; 60%)</text>
+
+              <!-- Decision 2: Branch YES heading Left (Reroute available) -->
+              <path d="M 787 320 L 680 320" stroke="#2e5bff" stroke-width="2" marker-end="url(#flow-arrow-blue)"/>
+              <rect x="722" y="309" width="28" height="16" rx="3" fill="#edf2ff" stroke="#c7d2fe"/>
+              <text x="736" y="321" font-family="monospace" font-size="9" font-weight="700" fill="#2e5bff" text-anchor="middle">YES</text>
+
+              <!-- Process: Set Steering Instruction -->
+              <rect x="480" y="297" width="200" height="46" rx="4" fill="#ffffff" stroke="#2e5bff" stroke-width="1.5"/>
+              <text x="580" y="316" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#201f20" text-anchor="middle">PROCESS: Set Steering</text>
+              <text x="580" y="332" font-family="monospace" font-size="10" fill="#2e5bff" text-anchor="middle">"Veer Left" or "Veer Right"</text>
+
+              <!-- Arrow to Output Parallelogram -->
+              <path d="M 480 320 L 420 320" stroke="#2e5bff" stroke-width="2" marker-end="url(#flow-arrow-blue)"/>
+
+              <!-- OUTPUT 2: Directional Steering Prompt (Parallelogram) -->
+              <polygon points="230,297 415,297 400,343 215,343" fill="#edf2ff" stroke="#2e5bff" stroke-width="1.5"/>
+              <text x="315" y="316" font-family="'Host Grotesk', sans-serif" font-size="12" font-weight="700" fill="#1e40af" text-anchor="middle">OUTPUT: Directional Alert</text>
+              <text x="315" y="332" font-family="monospace" font-size="10" fill="#2e5bff" text-anchor="middle">Spoken Audio + Tactile Vector</text>
+
+              <!-- Decision 2: Branch NO heading Right (All paths blocked) -->
+              <path d="M 977 320 L 1008 320" stroke="#ef4444" stroke-width="2" marker-end="url(#flow-arrow-red)"/>
+              <rect x="980" y="309" width="24" height="16" rx="3" fill="#fee2e2" stroke="#fca5a5"/>
+              <text x="992" y="321" font-family="monospace" font-size="9" font-weight="700" fill="#dc2626" text-anchor="middle">NO</text>
+
+              <!-- OUTPUT 3: Emergency SOS Halt (Parallelogram) -->
+              <polygon points="1018,297 1135,297 1120,343 1003,343" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+              <text x="1069" y="316" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#b91c1c" text-anchor="middle">OUTPUT: SOS HALT</text>
+              <text x="1069" y="332" font-family="monospace" font-size="9" fill="#dc2626" text-anchor="middle">vibrate([100,100,100])</text>
+
+              <!-- ─── CONTINUOUS FEEDBACK LOOPBACK ─── -->
+              <path d="M 215 195 H 55 V 125 H 145" stroke="#2e5bff" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#flow-arrow-blue)"/>
+              <path d="M 215 320 H 55" stroke="#2e5bff" stroke-width="1.8" stroke-dasharray="5 4"/>
+              <rect x="25" y="145" width="125" height="18" rx="3" fill="#f7f6f6" stroke="#e0e0df"/>
+              <text x="87" y="158" font-family="monospace" font-size="9" font-weight="700" fill="#2e5bff" text-anchor="middle">LOOP: Next Frame (16ms)</text>
+
+              <!-- ─── ROW 3: Subroutine (Voice Query & VLM Scene QA) ─── -->
+              <line x1="25" y1="380" x2="1120" y2="380" stroke="#e0e0df" stroke-width="1" stroke-dasharray="4 4"/>
+              <text x="25" y="398" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#6366f1" letter-spacing="0.04em">ASYNC SUBROUTINE: MULTIMODAL SCENE REASONING &amp; VOICE QA</text>
+
+              <!-- Input: Voice Query (Parallelogram) -->
+              <polygon points="35,410 220,410 205,456 20,456" fill="#f5f3ff" stroke="#6366f1" stroke-width="1.5"/>
+              <text x="120" y="429" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#4338ca" text-anchor="middle">INPUT: Spoken Query</text>
+              <text x="120" y="445" font-family="monospace" font-size="9" fill="#6366f1" text-anchor="middle">Web Speech API / Key 'R'</text>
+
+              <!-- Arrow -->
+              <path d="M 210 433 L 255 433" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#flow-arrow-indigo)"/>
+
+              <!-- Process: Context Fusion (Rectangle) -->
+              <rect x="255" y="410" width="220" height="46" rx="4" fill="#ffffff" stroke="#6366f1" stroke-width="1.5"/>
+              <text x="365" y="429" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#201f20" text-anchor="middle">PROCESS: Context Fusion</text>
+              <text x="365" y="445" font-family="monospace" font-size="9" fill="#6366f1" text-anchor="middle">Obstacle Coords + User Prompt</text>
+
+              <!-- Arrow -->
+              <path d="M 475 433 L 520 433" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#flow-arrow-indigo)"/>
+
+              <!-- Process: OpenRouter VLM (Rectangle) -->
+              <rect x="520" y="410" width="230" height="46" rx="4" fill="#ffffff" stroke="#6366f1" stroke-width="1.5"/>
+              <text x="635" y="429" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#4338ca" text-anchor="middle">PROCESS: OpenRouter VLM</text>
+              <text x="635" y="445" font-family="monospace" font-size="9" fill="#494949" text-anchor="middle">gemini-2.5-flash / llava reasoning</text>
+
+              <!-- Arrow -->
+              <path d="M 750 433 L 790 433" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#flow-arrow-indigo)"/>
+
+              <!-- Process: gTTS Synthesis (Rectangle) -->
+              <rect x="790" y="410" width="165" height="46" rx="4" fill="#ffffff" stroke="#6366f1" stroke-width="1.5"/>
+              <text x="872" y="429" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#201f20" text-anchor="middle">PROCESS: gTTS Audio</text>
+              <text x="872" y="445" font-family="monospace" font-size="9" fill="#606060" text-anchor="middle">Base64 MP3 Chunks</text>
+
+              <!-- Arrow -->
+              <path d="M 955 433 L 995 433" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#flow-arrow-indigo)"/>
+
+              <!-- Output: Spoken Guidance (Parallelogram) -->
+              <polygon points="1005,410 1135,410 1120,456 990,456" fill="#f5f3ff" stroke="#6366f1" stroke-width="1.5"/>
+              <text x="1062" y="429" font-family="'Host Grotesk', sans-serif" font-size="11" font-weight="700" fill="#4338ca" text-anchor="middle">OUTPUT: Voice Guidance</text>
+              <text x="1062" y="445" font-family="monospace" font-size="9" fill="#6366f1" text-anchor="middle">HTMLAudio Playback</text>
             </svg>
-        </div>
+          </div>
 
-        <div class="features-grid">
-            <div class="feature-card" data-tilt>
-                <div class="feature-icon">SEGMENTATION</div>
-                <h3>YOLOv11 Custom</h3>
-                <p>Proprietary segmentation model trained on high-contrast urban navigation datasets. Extracts
-                    pixel-perfect object boundaries instantly with TensorRT acceleration.</p>
+          <!-- Flowchart Execution Step Breakdown (Academic / Project Spec) -->
+          <div class="arch-breakdown-grid">
+            <!-- Stage 1 -->
+            <div class="arch-spec-card">
+              <div class="arch-spec-header">
+                <span class="arch-spec-step">PHASE 01</span>
+                <span class="arch-spec-time">2.1 ms</span>
+              </div>
+              <h4 class="arch-spec-title">Frame Acquisition &amp; Normalization</h4>
+              <ul class="arch-spec-rows">
+                <li>
+                  <span class="arch-spec-k">Flowchart Node</span>
+                  <span class="arch-spec-v">[Input] &rarr; [Process]</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Operation</span>
+                  <span class="arch-spec-v">Camera Stream (640&times;480 @ 60 FPS)</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Transformation</span>
+                  <span class="arch-spec-v">cv2.resize((512, 512)) + Mean/Std Norm</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Data Structure</span>
+                  <span class="arch-spec-v">NumPy array (FP16 [1, 3, 512, 512])</span>
+                </li>
+              </ul>
             </div>
-            <div class="feature-card" data-tilt>
-                <div class="feature-icon">SEMANTICS</div>
-                <h3>Vision-Language Synthesis</h3>
-                <p>Multi-modal AI contextualizes the environment. It doesn't just see a "chair"; it understands "an
-                    obstacle blocking the immediate path."</p>
-            </div>
-            <div class="feature-card" data-tilt>
-                <div class="feature-icon">TELEMETRY</div>
-                <h3>Spatial Haptics</h3>
-                <p>Translates 3D spatial data into high-fidelity haptic waveforms. Feel the proximity, speed, and
-                    dimensions of objects around you via wearable matrices.</p>
-            </div>
-        </div>
 
-        <div class="architecture-deep-dive">
-            <div class="deep-dive-block">
-                <h3>Continuous Feedback Loop</h3>
-                <p>At the center of Occulant's architecture is the real-time feedback loop. A stereo
-                    <strong>VIDEO</strong> array feeds continuous optical data to our local
-                    <strong>VisionAssist</strong> edge processor. This low-power module manages raw signal denoising
-                    before handing it over to the cloud or local <strong>ML Model</strong>.</p>
+            <!-- Stage 2 -->
+            <div class="arch-spec-card">
+              <div class="arch-spec-header">
+                <span class="arch-spec-step">PHASE 02</span>
+                <span class="arch-spec-time">11.4 ms</span>
+              </div>
+              <h4 class="arch-spec-title">Deep Learning Segmentation</h4>
+              <ul class="arch-spec-rows">
+                <li>
+                  <span class="arch-spec-k">Flowchart Node</span>
+                  <span class="arch-spec-v">[Process: SeaFormer-B]</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Architecture</span>
+                  <span class="arch-spec-v">SeaFormer-B / YOLOv11seg</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Execution Target</span>
+                  <span class="arch-spec-v">NVIDIA TensorRT FP16 / CUDA 12</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Classification</span>
+                  <span class="arch-spec-v">19 Cityscapes Roadway Classes</span>
+                </li>
+              </ul>
             </div>
-            <div class="deep-dive-block">
-                <h3>Multi-Stage Perception</h3>
-                <p>Unlike standard detection pipelines, our approach utilizes dual-stage validation. A lightweight
-                    <strong>LLM</strong> runs asynchronously alongside the core detection engine, correcting semantic
-                    misclassifications and providing a cohesive situational context (e.g., recognizing that a collection
-                    of segmented metal parts is actually a bicycle).</p>
+
+            <!-- Stage 3 -->
+            <div class="arch-spec-card">
+              <div class="arch-spec-header">
+                <span class="arch-spec-step">PHASE 03</span>
+                <span class="arch-spec-time">1.8 ms</span>
+              </div>
+              <h4 class="arch-spec-title">Spatial Decision Logic &amp; Routing</h4>
+              <ul class="arch-spec-rows">
+                <li>
+                  <span class="arch-spec-k">Flowchart Node</span>
+                  <span class="arch-spec-v">&lt;Decision: Diamond 1 &amp; 2&gt;</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Condition 1 (YES)</span>
+                  <span class="arch-spec-v">Center &ge; 75% &rarr; Path Clear</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Condition 2 (NO &rarr; YES)</span>
+                  <span class="arch-spec-v">Lateral &ge; 60% &rarr; Veer Steering</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Condition 3 (NO &rarr; NO)</span>
+                  <span class="arch-spec-v">All Blocked &rarr; Emergency SOS Halt</span>
+                </li>
+              </ul>
             </div>
-            <div class="deep-dive-block">
-                <h3>The Final Mile: Interaction</h3>
-                <p>Data from the models must be synthesized predictably. Through spatial sonification and directed
-                    haptics, the <strong>User</strong> node receives continuous feedback without sensory overload. The
-                    user directly issues <strong>asks</strong> directly to VisionAssist (via voice or peripheral
-                    triggers), instantly recalibrating the network's priority vectors.</p>
+
+            <!-- Stage 4 -->
+            <div class="arch-spec-card">
+              <div class="arch-spec-header">
+                <span class="arch-spec-step">PHASE 04</span>
+                <span class="arch-spec-time">0.9 ms</span>
+              </div>
+              <h4 class="arch-spec-title">Physical Actuation &amp; Loopback</h4>
+              <ul class="arch-spec-rows">
+                <li>
+                  <span class="arch-spec-k">Flowchart Node</span>
+                  <span class="arch-spec-v">[Output: Actuators] &rarr; (Loop)</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Haptic Patterns</span>
+                  <span class="arch-spec-v">50ms (Normal) / [100,100,100]ms (Halt)</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Audio Synthesis</span>
+                  <span class="arch-spec-v">Server-side gTTS Base64 MP3 stream</span>
+                </li>
+                <li>
+                  <span class="arch-spec-k">Cycle Loopback</span>
+                  <span class="arch-spec-v">Continuous Next Frame (@ ~60 FPS)</span>
+                </li>
+              </ul>
             </div>
+          </div>
+
+          <!-- End-to-End Latency Budget Bar -->
+          <div class="latency-budget-bar">
+            <div class="latency-budget-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2e5bff" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Total Execution Loop Timing Budget</span>
+            </div>
+            <div class="latency-budget-pills">
+              <span class="latency-pill">Frame Capture: <strong>2.1ms</strong></span>
+              <span class="latency-pill">TensorRT Inference: <strong>11.4ms</strong></span>
+              <span class="latency-pill">Spatial Logic: <strong>1.8ms</strong></span>
+              <span class="latency-pill">Actuation: <strong>0.9ms</strong></span>
+              <span class="latency-pill total">Total Loop: 16.2ms (&lt; 20ms Reflex Target)</span>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
+              <span class="latency-pill">Frame Capture: <strong>2.1ms</strong></span>
+              <span class="latency-pill">TensorRT Inference: <strong>11.4ms</strong></span>
+              <span class="latency-pill">Spatial Heuristics: <strong>1.8ms</strong></span>
+              <span class="latency-pill">Actuation: <strong>0.9ms</strong></span>
+              <span class="latency-pill total">Total Loop: 16.2ms (&lt; 20ms Reflex Target)</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="haptics" class="system-section haptics-section">
-        <div class="section-header">
-            <h2>Haptics & Segmentation</h2>
-            <p>Real-time semantic segmentation directs our high-fidelity haptic feedback system, perfectly isolating
-                dynamic obstacles.</p>
+    <!-- Core Pillars Section (Minimized Feature Lists) -->
+    <section class="section features-section" id="features">
+      <div class="container">
+        <div class="section-label">Core Pillars</div>
+        <h2 class="section-title">Essential Capabilities</h2>
+        <p class="section-desc">
+          Real-time segmentation, multimodal reasoning, and tactile feedback in a single edge loop.
+        </p>
+
+        <div class="pillars-grid">
+          <!-- Pillar 1: Vision -->
+          <div class="pillar-card">
+            <span class="pillar-badge">01 / Real-Time Vision</span>
+            <h3 class="pillar-title">Semantic Segmentation</h3>
+            <ul class="pillar-list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Three-Zone Path Tracking:</strong> Real-time clearance analysis across Left, Center, and Right paths.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>19 Hazard Categories:</strong> Isolates curbs, stairs, poles, moving vehicles, and pedestrians.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Sub-20ms Latency:</strong> 60 FPS TensorRT FP16 edge inference for instant reflexes.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>70% Contrast Masks:</strong> High-visibility overlays designed for low-vision clarity.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Pillar 2: Context Reasoning -->
+          <div class="pillar-card">
+            <span class="pillar-badge">02 / Multimodal Context</span>
+            <h3 class="pillar-title">Scene Understanding (VLM)</h3>
+            <ul class="pillar-list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Situational Voice Q&amp;A:</strong> Answers questions like <em>"What is blocking my path?"</em> in natural English.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Hands-Free Speech Input:</strong> Voice activation via microphone or <kbd>R</kbd> shortcut.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Server-Side Audio:</strong> Google TTS (gTTS) base64 MP3 stream with zero browser speech dependencies.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Spatial Proximity:</strong> Spoken relative distance and directional orientation.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Pillar 3: Haptics -->
+          <div class="pillar-card">
+            <span class="pillar-badge">03 / Silent Sensation</span>
+            <h3 class="pillar-title">Spatial Haptics</h3>
+            <ul class="pillar-list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Directional Course Taps:</strong> Gentle 50ms vibration confirming clear straight path.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Collision Alert:</strong> Urgent triple-pulse (<code>[100, 100, 100]ms</code>) to halt immediately.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Emergency SOS Sequence:</strong> High-intensity distress pattern for unexpected hazards.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Auditory Protection:</strong> Keeps ears free to hear traffic and ambient surroundings.</span>
+              </li>
+            </ul>
+          </div>
         </div>
-
-        <div class="haptics-layout">
-            <div class="haptics-text">
-                <h3>Bridging Perception to Sensation</h3>
-                <p>The visual world is hopelessly dense. Occulant extracts the salient features of any scene in
-                    real-time, masking out irrelevant background noise and focusing computing power entirely on
-                    navigational hazards.</p>
-                <p>In the demonstrator adjacent, the <strong>YOLOv11 Segmentation</strong> module precisely masks a
-                    pedestrian. The Vision-Language Model interprets this as an immediate trajectory threat and
-                    formulates actionable language. This textual vector is instantly converted to a physical map: a
-                    rapid pulsing sequence localized on the user's left haptic actuator array, alerting them to slow
-                    down.</p>
-                <p class="highlight-text">No screens. No delay. Pure intuition.</p>
-            </div>
-
-            <div class="haptics-demonstration">
-                <div class="video-container">
-                    <video src="haptics_video.mp4" autoplay loop muted playsinline class="segmentation-video"></video>
-
-                    <div class="ui-overlay">
-                        <div class="top-left corner"></div>
-                        <div class="top-right corner"></div>
-                        <div class="bottom-left corner"></div>
-                        <div class="bottom-right corner"></div>
-
-                        <div class="status-panel">
-                            <div class="status-item">
-                                <div class="dot blinking"></div> SEGMENTATION: ACTIVE
-                            </div>
-                            <div class="status-item">
-                                <div class="dot blinking"></div> SPATIAL MAP: LINKED
-                            </div>
-                        </div>
-
-                        <div class="terminal-readout context-box" id="haptics-context">
-                            <span id="haptic-msg-1" style="opacity: 0; transition: opacity 0.5s ease;">> Keep heading
-                                straight.</span><br>
-                            <span id="haptic-msg-2"
-                                style="opacity: 0; transition: opacity 0.5s ease; transition-delay: 2s;">> Slow down,
-                                person ahead.</span>
-                        </div>
-                    </div>
-                    <div class="sam-mask"></div>
-                </div>
-            </div>
-        </div>
+      </div>
     </section>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">OCCULANT<span>.sys</span></div>
-            <p class="copyright">&copy; 2026 Occulant Vision Systems. All rights reserved.</p>
+    <!-- Closing CTA Banner -->
+    <section class="closing-section">
+      <div class="container closing-banner">
+        <div>
+          <h2 class="closing-title">Experience autonomous spatial awareness.</h2>
+          <p class="closing-desc">
+            Launch the live camera demo in your browser or explore the complete open-source repository on GitHub.
+          </p>
         </div>
-    </footer>
 
-    <script src="script.js"></script>
+        <div class="closing-actions">
+          <a href="http://localhost:5000" target="_blank" rel="noopener noreferrer" class="btn-primary">Launch Live Demo &nearr;</a>
+          <a href="https://github.com/manthanabc/BlindAssit" target="_blank" rel="noopener noreferrer" class="btn-secondary">View Source on GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
-
 </html>

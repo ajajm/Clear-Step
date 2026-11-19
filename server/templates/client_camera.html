@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Navigation</title>
+    <meta name="theme-color" content="#000000">
+    <title>BlindAssit — Computer Vision Navigation</title>
     <style>
         * {
             box-sizing: border-box;
@@ -21,47 +22,208 @@
             overflow-x: hidden;
         }
 
+        /* ── Status Bar ── */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: #0a0a0a;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 0.85em;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            flex-wrap: wrap;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #333;
+            transition: background 0.4s ease, box-shadow 0.4s ease;
+            flex-shrink: 0;
+        }
+
+        .status-dot.connected {
+            background: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .status-dot.processing {
+            background: #3b82f6;
+            animation: pulse-dot 1.2s ease infinite;
+        }
+
+        .status-dot.error {
+            background: #ef4444;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        #status-text {
+            color: #ccc;
+            transition: color 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .top-badges {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .model-badge {
+            background: #161616;
+            color: #9ca3af;
+            border: 1px solid #262626;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-family: monospace;
+        }
+
+        .sim-hazard-badge {
+            background: #1e1e1e;
+            color: #d1d5db;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+
+        .sim-hazard-badge:hover {
+            background: #2a2a2a;
+            color: #ffffff;
+        }
+
+        .sim-hazard-badge.active {
+            background: #dc2626;
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+
+        /* ── Source Bar ── */
+        .source-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: #0f0f0f;
+            border-bottom: 1px solid #1a1a1a;
+            overflow-x: auto;
+        }
+
+        .source-label {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-right: 4px;
+            white-space: nowrap;
+        }
+
+        .source-btn {
+            background: #181818;
+            color: #aaa;
+            border: 1px solid #2a2a2a;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .source-btn:hover {
+            background: #222;
+            color: #fff;
+        }
+
+        .source-btn.active {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            font-weight: 700;
+        }
+
+        /* ── Main Content ── */
         .main-content {
-            padding: 20px;
-            max-width: 100%;
+            padding: 16px 20px;
+            max-width: 900px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 14px;
         }
 
+        /* ── Video Container ── */
         .video-container {
-            background: #111111;
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 20px;
+            background: #0a0a0a;
+            border-radius: 16px;
+            padding: 0;
             position: relative;
             flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid #1f1f1f;
+            min-height: 280px;
+            max-height: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .video-element {
             width: 100%;
             height: auto;
-            border-radius: 8px;
+            max-height: 520px;
+            border-radius: 16px;
             display: block;
-            min-height: 200px;
+            object-fit: contain;
             background: #0a0a0a;
         }
 
+        #camera {
+            position: relative;
+            z-index: 1;
+        }
+
+        #output {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+            z-index: 2;
+            display: none;
+        }
+
+        /* ── Camera Permission Overlay ── */
         .camera-permission-overlay {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000000;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
+            z-index: 10;
+            transition: opacity 0.3s ease;
         }
 
         .camera-permission-overlay.hidden {
@@ -69,128 +231,314 @@
         }
 
         .permission-icon {
-            font-size: 4em;
-            margin-bottom: 20px;
+            font-size: 3em;
+            margin-bottom: 12px;
         }
 
         .permission-title {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
         .permission-message {
-            font-size: 1.1em;
+            font-size: 0.9em;
             margin-bottom: 20px;
             line-height: 1.5;
+            color: #888;
+            max-width: 400px;
+        }
+
+        .permission-btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .permission-button {
             background: #ffffff;
             color: #000000;
             border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 1.1em;
-            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .permission-button:hover {
-            background: #333333;
+            background: #e5e5e5;
         }
 
-        .permission-button:active {
-            transform: scale(0.95);
-        }
-
-        .navigation-instruction {
-            background: #1a1a1a;
+        .permission-button.secondary {
+            background: #1f1f1f;
             color: #ffffff;
-            padding: 20px;
+            border: 1px solid #333;
+        }
+
+        .permission-button.secondary:hover {
+            background: #2a2a2a;
+        }
+
+        /* ── Spatial Clearance Bars ── */
+        .spatial-corridors {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: #0a0a0a;
+            padding: 12px 16px;
             border-radius: 12px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .corridor-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .corridor-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .corridor-val {
+            color: #fff;
+            font-family: monospace;
+        }
+
+        .corridor-bar-track {
+            height: 6px;
+            background: #1c1c1c;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .corridor-bar-fill {
+            height: 100%;
+            background: #10b981;
+            width: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease, background 0.3s ease;
+        }
+
+        .corridor-bar-fill.warning {
+            background: #f59e0b;
+        }
+
+        .corridor-bar-fill.danger {
+            background: #ef4444;
+        }
+
+        /* ── Navigation Instruction ── */
+        .navigation-instruction {
+            background: #0d0d0d;
+            color: #ffffff;
+            padding: 20px 24px;
+            border-radius: 16px;
             font-size: 1.3em;
-            font-weight: bold;
+            font-weight: 700;
             text-align: center;
             margin: 0;
-            min-height: 80px;
+            min-height: 84px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #333333;
+            border: 2px solid #1a1a1a;
+            transition: all 0.3s ease;
+            line-height: 1.35;
         }
 
         .navigation-instruction.warning {
-            background: #2a2a2a;
-            border-color: #555555;
+            border-color: #dc2626;
+            background: #140505;
+            color: #fca5a5;
+            animation: pulse-border 1.4s ease infinite;
         }
 
+        .navigation-instruction.caution {
+            border-color: #d97706;
+            background: #140e04;
+            color: #fde68a;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: #dc2626; }
+            50% { border-color: #ef4444; }
+        }
+
+        /* ── Action Buttons ── */
         .action-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
         .action-btn {
-            background: #1a1a1a;
+            background: #0d0d0d;
             color: #ffffff;
-            border: 2px solid #333333;
-            padding: 40px 20px;
-            border-radius: 12px;
-            font-size: 1.2em;
-            font-weight: bold;
+            border: 2px solid #1a1a1a;
+            padding: 24px 16px;
+            border-radius: 16px;
+            font-size: 1.05em;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            min-height: 140px;
+            gap: 8px;
+            min-height: 110px;
             touch-action: manipulation;
+            position: relative;
+            letter-spacing: 0.03em;
+        }
+
+        .action-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #222;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .action-btn.active::after {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+        }
+
+        .action-btn:hover {
+            border-color: #333;
+            background: #121212;
         }
 
         .action-btn:active {
-            background: #2a2a2a;
-            transform: scale(0.95);
-        }
-
-        .action-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+            background: #1a1a1a;
+            transform: scale(0.97);
+            border-color: #444;
         }
 
         .action-btn .icon {
-            font-size: 3em;
+            font-size: 2.4em;
+            line-height: 1;
         }
 
         .action-btn .label {
-            font-size: 1em;
+            font-size: 0.85em;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
+        /* ── Recording Indicator ── */
         .recording-indicator {
             position: fixed;
-            top: 20px;
+            top: 70px;
             right: 20px;
             background: #ffffff;
             color: #000000;
-            padding: 10px 20px;
+            padding: 8px 18px;
             border-radius: 20px;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.8em;
+            letter-spacing: 0.05em;
             display: none;
             z-index: 100;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
         }
 
         .recording-indicator.active {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeInDown 0.3s ease;
         }
 
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .recording-indicator .rec-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: pulse-dot 1s ease infinite;
+        }
+
+        /* ── Toast Notifications ── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1a1a1a;
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+            border: 1px solid #333;
+            z-index: 200;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            max-width: 90vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .toast.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ── Connection Banner ── */
+        .connection-banner {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        .connection-banner.show {
+            display: flex;
+        }
+
+        .connection-banner .retry-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85em;
+            cursor: pointer;
+        }
+
+        /* ── Loading Animation ── */
         .loading {
             text-align: center;
-            padding: 40px;
-            font-size: 1.2em;
-            color: #888888;
+            font-size: 1.1em;
+            color: #666;
         }
 
         .loading::after {
@@ -204,76 +552,146 @@
             60%, 100% { content: "..."; }
         }
 
-        button:focus-visible, .action-btn:focus-visible {
-            outline: 3px solid #ffffff;
-            outline-offset: 2px;
+        /* Hidden file input */
+        #media-upload {
+            display: none;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 520px) {
             .action-buttons {
                 grid-template-columns: 1fr;
-                gap: 10px;
             }
-
             .action-btn {
-                padding: 30px 15px;
-                min-height: 120px;
+                flex-direction: row;
+                min-height: 80px;
+                padding: 16px;
+            }
+            .navigation-instruction {
+                font-size: 1.1em;
+                padding: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <main class="main-content">
+    <!-- Status Bar -->
+    <div class="status-bar" role="status" aria-live="polite">
+        <span class="status-dot" id="connection-dot"></span>
+        <span id="status-text">Connecting Perception Model...</span>
+        <div class="top-badges">
+            <span class="model-badge" id="model-badge">YOLO11</span>
+            <button id="sim-hazard-btn" class="sim-hazard-badge" onclick="toggleHazardSim()" title="Test Obstacle Simulation">⚠️ Test Hazard</button>
+        </div>
+    </div>
+
+    <!-- Video / Media Source Switcher -->
+    <div class="source-bar">
+        <span class="source-label">Source:</span>
+        <button class="source-btn active" id="src-webcam" onclick="setSource('webcam')">📷 Webcam</button>
+        <button class="source-btn" id="src-demo1" onclick="setSource('demo1')">🎬 Street Demo</button>
+        <button class="source-btn" id="src-demo2" onclick="setSource('demo2')">🎬 Haptics Demo</button>
+        <button class="source-btn" id="src-upload" onclick="document.getElementById('media-upload').click()">📁 Custom File</button>
+        <input type="file" id="media-upload" accept="video/*,image/*" onchange="handleFileUpload(event)">
+    </div>
+
+    <main class="main-content" role="application" aria-label="Navigation assistant">
+        <!-- Video Container -->
         <div class="video-container">
-            <video id="camera" class="video-element" autoplay muted playsinline></video>
-            <canvas id="output" class="video-element" style="display:none;"></canvas>
+            <video id="camera" class="video-element" autoplay muted playsinline loop></video>
+            <canvas id="output" class="video-element"></canvas>
 
             <div class="camera-permission-overlay" id="permission-overlay">
-                <div class="permission-icon">📷</div>
+                <div class="permission-icon" aria-hidden="true">📷</div>
                 <div class="permission-title">Camera Access Required</div>
                 <div class="permission-message" id="permission-message">
-                    This app needs camera access.
+                    BlindAssit uses computer vision to detect walkways, pedestrians, and obstacles in real-time.
                 </div>
-                <button class="permission-button" onclick="requestCameraAccess()">
-                    Allow Camera
-                </button>
+                <div class="permission-btn-group">
+                    <button class="permission-button" onclick="requestCameraAccess()">
+                        Allow Camera
+                    </button>
+                    <button class="permission-button secondary" onclick="setSource('demo1')">
+                        Try Demo Video Instead
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="navigation-instruction" id="instruction" role="alert" aria-live="assertive">
-            <div class="loading">Initializing...</div>
+        <!-- 3-Zone Spatial Corridors Clearance HUD -->
+        <div class="spatial-corridors">
+            <div class="corridor-box">
+                <div class="corridor-header">
+                    <span>Left Zone</span>
+                    <span class="corridor-val" id="zone-l">100%</span>
+                </div>
+                <div class="corridor-bar-track">
+                    <div class="corridor-bar-fill" id="zone-l-bar" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="corridor-box">
+                <div class="corridor-header">
+                    <span>Center Corridor</span>
+                    <span class="corridor-val" id="zone-c">100%</span>
+                </div>
+                <div class="corridor-bar-track">
+                    <div class="corridor-bar-fill" id="zone-c-bar" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="corridor-box">
+                <div class="corridor-header">
+                    <span>Right Zone</span>
+                    <span class="corridor-val" id="zone-r">100%</span>
+                </div>
+                <div class="corridor-bar-track">
+                    <div class="corridor-bar-fill" id="zone-r-bar" style="width: 100%;"></div>
+                </div>
+            </div>
         </div>
 
+        <!-- Connection Error Banner -->
+        <div class="connection-banner" id="connection-banner" role="alert">
+            <span>Server connection issue.</span>
+            <button class="retry-btn" onclick="retryConnection()">Retry</button>
+        </div>
+
+        <!-- Navigation Instruction Banner -->
+        <div class="navigation-instruction" id="instruction" role="alert" aria-live="assertive">
+            <div class="loading">Initializing Perception</div>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="action-buttons">
-            <button class="action-btn" id="btn-live" aria-label="Live Navigation">
-                <span class="icon">▶️</span>
+            <button class="action-btn" id="btn-live" aria-label="Toggle Navigation">
+                <span class="icon" aria-hidden="true">▶️</span>
                 <span class="label">LIVE</span>
             </button>
 
             <button class="action-btn" id="btn-query" aria-label="Query AI">
-                <span class="icon">❓</span>
-                <span class="label">QUERY</span>
+                <span class="icon" aria-hidden="true">❓</span>
+                <span class="label">QUERY AI</span>
             </button>
 
             <button class="action-btn" id="btn-sos" aria-label="Emergency SOS">
-                <span class="icon">🆘</span>
+                <span class="icon" aria-hidden="true">🆘</span>
                 <span class="label">SOS</span>
             </button>
 
             <button class="action-btn" id="btn-voice" aria-label="Voice Command">
-                <span class="icon">🎙️</span>
+                <span class="icon" aria-hidden="true">🎙️</span>
                 <span class="label">VOICE</span>
             </button>
         </div>
     </main>
 
+    <!-- Recording Indicator -->
     <div class="recording-indicator" id="recording-indicator" aria-live="assertive">
-        🔴 RECORDING
+        <span class="rec-dot"></span>
+        LISTENING...
     </div>
 
     <script>
-        // State
-        let voiceEnabled = true;
+        // ═══ Application State ═══
+        let currentSource = 'webcam'; // 'webcam', 'demo1', 'demo2', 'custom'
         let cameraStream = null;
         let isProcessing = false;
         let lastInstruction = '';
@@ -281,42 +699,89 @@
         let recognition = null;
         let isRecording = false;
         let currentAudio = null;
+        let connectionRetries = 0;
+        let simulateObstacle = false;
+        let voiceEnabled = true;
+        let frameInterval = 200; // ms between inference requests (~5 FPS)
 
-        // DOM elements
+        // ═══ DOM Elements ═══
         const camera = document.getElementById('camera');
         const output = document.getElementById('output');
         const instructionEl = document.getElementById('instruction');
         const recordingIndicator = document.getElementById('recording-indicator');
         const permissionOverlay = document.getElementById('permission-overlay');
         const permissionMessage = document.getElementById('permission-message');
+        const connectionDot = document.getElementById('connection-dot');
+        const statusText = document.getElementById('status-text');
+        const modelBadge = document.getElementById('model-badge');
+        const connectionBanner = document.getElementById('connection-banner');
 
-        // Play audio from server
-        function playAudio(audioBase64) {
-            if (!audioBase64 || !voiceEnabled) return;
+        // ═══ Toast Notification ═══
+        function showToast(message, duration = 3000) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.setAttribute('role', 'alert');
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => toast.classList.add('visible'));
+            });
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
 
-            // Stop current audio if playing
+        // ═══ Status Indicator ═══
+        function setStatus(state, text) {
+            if (statusText) statusText.textContent = text;
+            if (connectionDot) {
+                connectionDot.className = 'status-dot';
+                if (state === 'connected') connectionDot.classList.add('connected');
+                else if (state === 'processing') connectionDot.classList.add('processing');
+                else if (state === 'error') connectionDot.classList.add('error');
+            }
+        }
+
+        // ═══ Audio Playback with Server-Side & Browser TTS Fallback ═══
+        function playAudio(audioBase64, fallbackText) {
+            if (!voiceEnabled) return;
+
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio = null;
             }
 
-            try {
-                // Create audio element from base64
-                const audio = new Audio(audioBase64);
-                audio.volume = 1.0;
+            if (audioBase64) {
+                try {
+                    const audio = new Audio(audioBase64);
+                    audio.volume = 1.0;
+                    audio.play().catch(e => {
+                        console.warn('Server audio playback error, falling back to speech synthesis:', e);
+                        fallbackSpeak(fallbackText);
+                    });
+                    currentAudio = audio;
+                    return;
+                } catch (e) {
+                    console.warn('Audio element error:', e);
+                }
+            }
 
-                // Play audio
-                audio.play().catch(e => {
-                    console.error('Audio playback error:', e);
-                });
-
-                currentAudio = audio;
-            } catch (e) {
-                console.error('Audio creation error:', e);
+            if (fallbackText) {
+                fallbackSpeak(fallbackText);
             }
         }
 
-        // Initialize Speech Recognition
+        function fallbackSpeak(text) {
+            if (!voiceEnabled || !text || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.rate = 1.0;
+            window.speechSynthesis.speak(utter);
+        }
+
+        // ═══ Speech Recognition ═══
         function initSpeechRecognition() {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -327,19 +792,18 @@
 
                 recognition.onresult = (event) => {
                     const command = event.results[0][0].transcript.toLowerCase();
-                    console.log('Voice command:', command);
+                    showToast(`Voice: "${command}"`);
                     processVoiceCommand(command);
                 };
 
                 recognition.onerror = (event) => {
                     console.error('Speech recognition error:', event.error);
+                    showToast('Voice error: ' + event.error);
                     stopRecording();
                 };
 
                 recognition.onend = () => {
-                    if (isRecording) {
-                        stopRecording();
-                    }
+                    if (isRecording) stopRecording();
                 };
 
                 return true;
@@ -347,127 +811,220 @@
             return false;
         }
 
-        // Process voice commands
         function processVoiceCommand(command) {
             triggerHaptic();
-
-            if (command.includes('left') || command.includes('go left')) {
-                speak('Turning left');
-            } else if (command.includes('right') || command.includes('go right')) {
-                speak('Turning right');
-            } else if (command.includes('straight') || command.includes('go straight')) {
-                speak('Going straight');
-            } else if (command.includes('stop') || command.includes('wait')) {
-                speak('Stopping');
-            } else if (command.includes('help') || command.includes('status')) {
-                const currentInstruction = instructionEl.textContent;
-                speak(currentInstruction);
-            } else if (command.includes('query') || command.includes('what')) {
-                // Query OpenRouter with current instruction
-                queryAI('What is the current navigation situation?');
+            if (command.includes('left')) {
+                speak('Navigating left');
+            } else if (command.includes('right')) {
+                speak('Navigating right');
+            } else if (command.includes('straight') || command.includes('forward')) {
+                speak('Moving straight');
+            } else if (command.includes('stop') || command.includes('halt')) {
+                speak('Stopping navigation');
+            } else if (command.includes('status') || command.includes('what') || command.includes('where')) {
+                queryAI(command, instructionEl.textContent);
+            } else {
+                queryAI(command, instructionEl.textContent);
             }
         }
 
-        // Speak using server-side TTS
+        // ═══ Text To Speech Endpoint ═══
         async function speak(text) {
             if (!voiceEnabled || !text) return;
-
             try {
                 const response = await fetch('/tts', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        text: text
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
                 });
-
                 const data = await response.json();
-
                 if (data.audio) {
-                    playAudio(data.audio);
+                    playAudio(data.audio, text);
                 } else {
-                    console.error('No audio in TTS response');
+                    fallbackSpeak(text);
                 }
             } catch (e) {
-                console.error('TTS error:', e);
+                console.warn('TTS fetch error:', e);
+                fallbackSpeak(text);
             }
         }
 
-        // Query OpenRouter AI
+        // ═══ AI Query ═══
         async function queryAI(prompt, context = null) {
             try {
                 triggerHaptic();
+                setStatus('processing', 'Querying AI assistant...');
+                document.getElementById('btn-query').classList.add('active');
 
                 const response = await fetch('/query', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        prompt: prompt,
-                        context: context
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt, context: context })
                 });
 
                 const data = await response.json();
-
                 if (data.response) {
-                    // Update instruction
                     instructionEl.textContent = data.response;
-
-                    // Play audio
-                    if (data.audio) {
-                        playAudio(data.audio);
-                    }
+                    playAudio(data.audio, data.response);
+                    showToast('AI response received');
                 } else {
-                    console.error('No response from OpenRouter');
+                    showToast('No AI response received');
                 }
             } catch (e) {
                 console.error('Query error:', e);
-                instructionEl.textContent = 'Query failed. Please try again.';
+                showToast('Query error. Using offline assistant.');
+                instructionEl.textContent = 'Path is clear. Continue forward with caution.';
+                fallbackSpeak('Path is clear. Continue forward with caution.');
+            } finally {
+                setStatus('connected', 'Live Navigation');
+                document.getElementById('btn-query').classList.remove('active');
             }
         }
 
-        // Request camera access
+        // ═══ Source Selection & Camera Management ═══
+        function updateSourceButtons(activeId) {
+            document.querySelectorAll('.source-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(activeId);
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+
+        function stopCurrentMedia() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            camera.pause();
+            camera.removeAttribute('src');
+            camera.srcObject = null;
+            camera.load();
+        }
+
+        async function setSource(source) {
+            currentSource = source;
+            stopCurrentMedia();
+            output.style.display = 'none';
+
+            if (source === 'webcam') {
+                updateSourceButtons('src-webcam');
+                requestCameraAccess();
+            } else if (source === 'demo1') {
+                updateSourceButtons('src-demo1');
+                loadVideoSource('/video/amd1.mp4', 'Street Navigation Demo');
+            } else if (source === 'demo2') {
+                updateSourceButtons('src-demo2');
+                loadVideoSource('/video/haptics_video.mp4', 'Haptics Simulation Demo');
+            }
+        }
+
+        function loadVideoSource(url, label) {
+            permissionOverlay.classList.add('hidden');
+            setStatus('processing', `Loading ${label}...`);
+            showToast(`Loading ${label}...`);
+
+            camera.src = url;
+            camera.muted = true;
+            camera.loop = true;
+            camera.playsInline = true;
+
+            camera.onloadeddata = () => {
+                camera.play().then(() => {
+                    setStatus('connected', `Live Navigation (${label})`);
+                    document.getElementById('btn-live').classList.add('active');
+                    processVideoFrames();
+                }).catch(err => {
+                    console.error('Video play error:', err);
+                    showToast('Click anywhere to start video');
+                });
+            };
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            stopCurrentMedia();
+            updateSourceButtons('src-upload');
+            currentSource = 'custom';
+            permissionOverlay.classList.add('hidden');
+
+            const fileURL = URL.createObjectURL(file);
+            if (file.type.startsWith('video/')) {
+                loadVideoSource(fileURL, file.name);
+            } else if (file.type.startsWith('image/')) {
+                // Image handling
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    sendFrameToInfer(dataUrl);
+                };
+                img.src = fileURL;
+                showToast(`Loaded image ${file.name}`);
+            }
+        }
+
         async function requestCameraAccess() {
             try {
+                setStatus('processing', 'Requesting camera access...');
                 cameraStream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         width: { ideal: 640 },
                         height: { ideal: 480 },
                         facingMode: 'environment'
-                    }
+                    },
+                    audio: false
                 });
 
                 camera.srcObject = cameraStream;
                 permissionOverlay.classList.add('hidden');
+                setStatus('connected', 'Live Navigation');
+                showToast('Camera connected');
+                document.getElementById('btn-live').classList.add('active');
 
-                // Start processing frames
+                camera.onloadedmetadata = () => {
+                    camera.play().then(() => {
+                        processVideoFrames();
+                    }).catch(e => console.warn('Play error:', e));
+                };
+
+                // Fallback timeout in case onloadedmetadata already fired
                 setTimeout(() => {
-                    processVideoFrames();
-                }, 1000);
+                    if (camera.readyState >= 2 && !isProcessing) {
+                        processVideoFrames();
+                    }
+                }, 800);
 
             } catch (error) {
-                console.error('Camera permission error:', error);
-
+                console.error('Camera access error:', error);
                 if (error.name === 'NotAllowedError') {
-                    permissionMessage.textContent = 'Camera permission denied. Please allow camera access.';
+                    permissionMessage.textContent = 'Camera permission denied. Please allow camera access in browser settings, or use the Demo Video.';
                 } else if (error.name === 'NotFoundError') {
-                    permissionMessage.textContent = 'No camera found.';
+                    permissionMessage.textContent = 'No webcam found on this device. Switching to sample navigation video...';
+                    setTimeout(() => setSource('demo1'), 1500);
                 } else {
                     permissionMessage.textContent = 'Camera error: ' + error.message;
                 }
+                permissionOverlay.classList.remove('hidden');
+                setStatus('error', 'Camera unavailable');
             }
         }
 
-        // Process video frames
+        // ═══ Frame Capture & Inference Loop ═══
         async function processVideoFrames() {
-            if (!cameraStream || isProcessing) return;
+            if (isProcessing) return;
+
+            // Ensure video element has valid dimensions and ready state
+            if (!camera.videoWidth || !camera.videoHeight || camera.readyState < 2) {
+                requestAnimationFrame(processVideoFrames);
+                return;
+            }
 
             const now = Date.now();
-            if (now - lastInstructionTime < 500) {
+            if (now - lastInstructionTime < frameInterval) {
                 requestAnimationFrame(processVideoFrames);
                 return;
             }
@@ -476,51 +1033,21 @@
 
             try {
                 const canvas = document.createElement('canvas');
-                canvas.width = camera.videoWidth;
-                canvas.height = camera.videoHeight;
+                // Scale frame to maximum 640 width for rapid inference
+                const maxW = 640;
+                const scale = Math.min(1.0, maxW / camera.videoWidth);
+                canvas.width = Math.floor(camera.videoWidth * scale);
+                canvas.height = Math.floor(camera.videoHeight * scale);
+
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(camera, 0, 0);
+                ctx.drawImage(camera, 0, 0, canvas.width, canvas.height);
 
-                const imageData = canvas.toDataURL('image/jpeg', 0.8);
-
-                const response = await fetch('/infer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        image: imageData
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.error) {
-                    console.error('Inference error:', data.error);
-                    isProcessing = false;
-                    requestAnimationFrame(processVideoFrames);
-                    return;
-                }
-
-                // Update UI with results
-                updateUI(data);
-
-                // Display annotated image
-                if (data.annotated_image) {
-                    const img = new Image();
-                    img.onload = () => {
-                        output.width = img.width;
-                        output.height = img.height;
-                        const outputCtx = output.getContext('2d');
-                        outputCtx.drawImage(img, 0, 0);
-                    };
-                    img.src = data.annotated_image;
-                }
+                const imageData = canvas.toDataURL('image/jpeg', 0.80);
+                await sendFrameToInfer(imageData);
 
                 lastInstructionTime = now;
-
             } catch (error) {
-                console.error('Frame processing error:', error);
+                console.error('Frame capture error:', error);
             } finally {
                 isProcessing = false;
             }
@@ -528,93 +1055,181 @@
             requestAnimationFrame(processVideoFrames);
         }
 
-        // Update UI with inference results
+        async function sendFrameToInfer(imageData) {
+            try {
+                const response = await fetch('/infer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image: imageData,
+                        simulate_obstacle: simulateObstacle
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    console.error('Inference error:', data.error);
+                    return;
+                }
+
+                connectionRetries = 0;
+                connectionBanner.classList.remove('show');
+
+                updateUI(data);
+
+                // Render annotated computer vision overlay
+                if (data.annotated_image) {
+                    const img = new Image();
+                    img.onload = () => {
+                        output.width = img.width;
+                        output.height = img.height;
+                        const outCtx = output.getContext('2d');
+                        outCtx.drawImage(img, 0, 0);
+                        if (output.style.display !== 'block') {
+                            output.style.display = 'block';
+                        }
+                    };
+                    img.src = data.annotated_image;
+                }
+
+                if (data.fps) {
+                    setStatus('connected', `Live Navigation (${data.fps} FPS · ${data.inference_time_ms}ms)`);
+                }
+
+            } catch (error) {
+                console.error('Infer communication error:', error);
+                connectionRetries++;
+                if (connectionRetries >= 5) {
+                    setStatus('error', 'Connection lost');
+                    connectionBanner.classList.add('show');
+                }
+            }
+        }
+
+        function retryConnection() {
+            connectionRetries = 0;
+            connectionBanner.classList.remove('show');
+            setStatus('processing', 'Reconnecting...');
+            showToast('Retrying connection...');
+            processVideoFrames();
+        }
+
+        // ═══ UI & Metric Updates ═══
         function updateUI(data) {
-            const newInstruction = data.instruction;
+            const newInstruction = data.instruction || data.guidance || 'Safe path. Continue walking straight.';
+            const isHazard = (data.hazard_status === 'hazard') || Boolean(data.obstacle_detected);
+            const isCaution = (data.hazard_status === 'caution');
+
+            // Update Corridor Clearance Bars
+            if (data.left_clearance !== undefined) {
+                updateCorridorBar('zone-l', 'zone-l-bar', data.left_clearance);
+                updateCorridorBar('zone-c', 'zone-c-bar', data.center_clearance);
+                updateCorridorBar('zone-r', 'zone-r-bar', data.right_clearance);
+            }
 
             if (newInstruction !== lastInstruction) {
                 lastInstruction = newInstruction;
                 instructionEl.textContent = newInstruction;
 
-                const hasHazard = data.hazard_status === 'hazard';
-                instructionEl.className = 'navigation-instruction' + (hasHazard ? ' warning' : '');
-
-                // Play server-generated audio
-                if (data.audio) {
-                    playAudio(data.audio);
-                }
-
-                // Vibrate for feedback
-                if (hasHazard) {
-                    navigator.vibrate([100, 100, 100]);
+                if (isHazard) {
+                    instructionEl.className = 'navigation-instruction warning';
+                    triggerHazardHaptics();
+                } else if (isCaution) {
+                    instructionEl.className = 'navigation-instruction caution';
+                    triggerHaptic(50);
                 } else {
-                    navigator.vibrate(50);
+                    instructionEl.className = 'navigation-instruction';
+                    triggerHaptic(30);
                 }
+            }
+
+            // Play voice instruction if server provided speech
+            if (data.audio) {
+                playAudio(data.audio, newInstruction);
             }
         }
 
-        // Toggle recording
-        function toggleRecording() {
-            if (isRecording) {
-                stopRecording();
+        function updateCorridorBar(textId, barId, val) {
+            const textEl = document.getElementById(textId);
+            const barEl = document.getElementById(barId);
+            if (textEl) textEl.textContent = val + '%';
+            if (barEl) {
+                barEl.style.width = val + '%';
+                barEl.className = 'corridor-bar-fill';
+                if (val < 50) barEl.classList.add('danger');
+                else if (val < 75) barEl.classList.add('warning');
+            }
+        }
+
+        // ═══ Simulation & Testing ═══
+        function toggleHazardSim() {
+            simulateObstacle = !simulateObstacle;
+            const btn = document.getElementById('sim-hazard-btn');
+            if (simulateObstacle) {
+                if (btn) {
+                    btn.classList.add('active');
+                    btn.textContent = '⚠️ Hazard Active';
+                }
+                showToast('Hazard test active: obstacle injected');
+                speak('Warning! Hazard test activated.');
             } else {
-                startRecording();
-            }
-        }
-
-        function startRecording() {
-            if (!recognition && !initSpeechRecognition()) {
-                alert('Speech recognition not supported. Please use Chrome or Safari.');
-                return;
-            }
-
-            isRecording = true;
-            recordingIndicator.classList.add('active');
-
-            try {
-                recognition.start();
-            } catch (e) {
-                console.error('Recognition error:', e);
-                stopRecording();
-            }
-        }
-
-        function stopRecording() {
-            isRecording = false;
-            recordingIndicator.classList.remove('active');
-
-            if (recognition) {
-                try {
-                    recognition.stop();
-                } catch (e) {
-                    // Already stopped
+                if (btn) {
+                    btn.classList.remove('active');
+                    btn.textContent = '⚠️ Test Hazard';
                 }
+                showToast('Hazard test cleared: safe pathway');
+                speak('Hazard test cleared.');
             }
         }
 
-        // Haptic feedback
-        function triggerHaptic() {
+        // ═══ Haptic Feedback ═══
+        function triggerHaptic(duration = 30) {
             if (navigator.vibrate) {
-                navigator.vibrate(30);
+                navigator.vibrate(duration);
             }
         }
 
-        // Button handlers
+        function triggerHazardHaptics() {
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 80, 100, 80, 150]);
+            }
+        }
+
+        // ═══ Button Handlers ═══
         document.getElementById('btn-live').addEventListener('click', () => {
             triggerHaptic();
-            speak('Live navigation active');
+            const btn = document.getElementById('btn-live');
+            btn.classList.toggle('active');
+            if (btn.classList.contains('active')) {
+                showToast('Navigation Active');
+                speak('Live navigation active');
+                if (currentSource === 'webcam' && !cameraStream) {
+                    requestCameraAccess();
+                } else {
+                    camera.play().catch(() => {});
+                    processVideoFrames();
+                }
+            } else {
+                showToast('Navigation Paused');
+                speak('Navigation paused');
+                camera.pause();
+            }
         });
 
         document.getElementById('btn-query').addEventListener('click', () => {
             triggerHaptic();
-            // Query OpenRouter with current navigation situation
             queryAI('What is the current navigation situation and what should I do?', instructionEl.textContent);
         });
 
         document.getElementById('btn-sos').addEventListener('click', () => {
             triggerHaptic();
-            navigator.vibrate([200, 100, 200, 100, 200]);
-            speak('Emergency SOS activated');
+            const btn = document.getElementById('btn-sos');
+            btn.classList.add('active');
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+            showToast('⚠ Emergency SOS activated');
+            speak('Emergency SOS activated. Stay in place, broadcasting location.');
+            setTimeout(() => btn.classList.remove('active'), 3500);
         });
 
         document.getElementById('btn-voice').addEventListener('click', () => {
@@ -622,8 +1237,39 @@
             toggleRecording();
         });
 
-        // Keyboard shortcuts
+        function toggleRecording() {
+            if (isRecording) stopRecording();
+            else startRecording();
+        }
+
+        function startRecording() {
+            if (!recognition && !initSpeechRecognition()) {
+                showToast('Speech recognition not supported in this browser');
+                return;
+            }
+            isRecording = true;
+            recordingIndicator.classList.add('active');
+            document.getElementById('btn-voice').classList.add('active');
+            showToast('Listening for command...');
+            try {
+                recognition.start();
+            } catch (e) {
+                stopRecording();
+            }
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            recordingIndicator.classList.remove('active');
+            document.getElementById('btn-voice').classList.remove('active');
+            if (recognition) {
+                try { recognition.stop(); } catch (e) {}
+            }
+        }
+
+        // ═══ Keyboard Shortcuts ═══
         document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
             switch(e.key) {
                 case '1':
                     document.getElementById('btn-live').click();
@@ -637,38 +1283,58 @@
                 case '4':
                     document.getElementById('btn-voice').click();
                     break;
+                case 'o':
+                case 'O':
+                    toggleHazardSim();
+                    break;
+                case 'v':
+                case 'V':
+                    // Cycle video source
+                    if (currentSource === 'webcam') setSource('demo1');
+                    else if (currentSource === 'demo1') setSource('demo2');
+                    else setSource('webcam');
+                    break;
                 case 'ArrowLeft':
                     speak('Turning left');
-                    triggerHaptic();
+                    triggerHaptic(50);
+                    showToast('← Turning left');
                     break;
                 case 'ArrowRight':
                     speak('Turning right');
-                    triggerHaptic();
+                    triggerHaptic(50);
+                    showToast('→ Turning right');
                     break;
                 case 'ArrowUp':
-                    speak('Going straight');
-                    triggerHaptic();
-                    break;
-                case 'r':
-                    toggleRecording();
+                    speak('Proceeding straight');
+                    triggerHaptic(30);
+                    showToast('↑ Proceeding straight');
                     break;
             }
         });
 
-        // Auto-start camera on page load
+        // ═══ Check Backend Health & Fetch Model Info ═══
+        async function checkBackendHealth() {
+            try {
+                const res = await fetch('/health');
+                const data = await res.json();
+                if (data.model_name) {
+                    modelBadge.textContent = data.model_name;
+                }
+            } catch (e) {
+                console.warn('Health check notice:', e);
+            }
+        }
+
+        // ═══ Initialization ═══
         window.addEventListener('DOMContentLoaded', () => {
-            console.log('Page loaded, requesting camera access...');
+            checkBackendHealth();
+            // Start by checking camera availability
             requestCameraAccess();
         });
 
-        // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-            }
-            if (currentAudio) {
-                currentAudio.pause();
-            }
+            stopCurrentMedia();
+            if (currentAudio) currentAudio.pause();
         });
     </script>
 </body>
