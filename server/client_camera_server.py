@@ -705,6 +705,7 @@ app = Flask(__name__, template_folder=template_dir)
 
 
 @app.route('/')
+@app.route('/console')
 def index():
     """Main navigation assistant interface."""
     return render_template('client_camera.html')
